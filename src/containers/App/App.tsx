@@ -1,33 +1,51 @@
 import React, { Component } from 'react';
-import AppForm from "../../components/Forms/AppForm";
+import { connect } from 'react-redux';
+import AppForm from '../../components/Forms/AppForm';
+import sendServer from '../../actions/appActions'
 
 // Container
-class App extends Component {
+class App extends Component<any, any> {
 
-    onClick = (e: any) => {
-        console.log("Clicked in redux form")
+    onClick = (e: any, data: any) => {
+        e.preventDefault();
+        this.props.createName(data)
     }
 
-  render() {
-    // @ts-ignore
-      // @ts-ignore
-      return (
-        <div className="col">
-            <div className="card">
-                <div className="card-header">
-                    Redux Form
-                </div>
-                <div className="card-body">
-                    <div className="card-title">Formulário</div>
-                    <AppForm onClick={ this.onClick }/>
-                </div>
-                <div className="card-footer">
-                    <p>Footer</p>
+    onChangeName = ({ name }: any) => {
+        
+    }
+
+    render() {
+        return (
+            <div className="col">
+                <div className="card">
+                    <div className="card-header">
+                        Redux Form
+                    </div>
+                    <div className="card-body">
+                        <div className="card-title">Formulário</div>
+                        <AppForm onClick={this.onClick} 
+                                 onChange={this.onChangeName}/>
+                    </div>
+                    <div className="card-footer">
+                        <p>Footer</p>
+                    </div>
                 </div>
             </div>
-        </div>
-    );
-  }
+        );
+    }
 }
 
-export default App;
+const mapStateToProps = (state: any) => {
+    return {
+        initialValues: state.name.data
+    }
+}
+
+const mapDispatchToProps = (dispatch: any) => {
+    return {
+        createName: (data: any) => dispatch(sendServer(data))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
